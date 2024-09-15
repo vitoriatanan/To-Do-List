@@ -1,9 +1,11 @@
-from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from sql_app.routers import users, administrador  # Importar os routers
 
-from . import crud, models, schemas
+from . import models
 from .database import SessionLocal, engine
 
+
+# Criação automática das tabelas
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -18,9 +20,8 @@ def get_db():
         db.close()
 
 
-@app.post("/users/", response_model=schemas.User)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_matricula(db, matricula=user.matricula)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Matrícula já cadastrada!")
-    return crud.create_user(db=db, user=user)
+# Incluindo o router de usuários
+app.include_router(users.router, prefix="/api/v1")
+
+# Incluindo o router de administradores
+app.include_router(administrador.router, prefix="/api/v1")
