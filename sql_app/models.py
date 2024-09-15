@@ -1,8 +1,7 @@
 # MODELOS DE BANCO DE DADOS
 # modelos SQLAlchemy a partir da classe Base
 
-from sqlalchemy import Column, ForeignKey, Integer, String
-
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -22,22 +21,33 @@ class User(Base):
     #unique garante que a matrícula deve ser única. Garante que não possam existir dois registros com o mesmo valor de matrícula
     #index: cria um índice na coluna, para acelerar as buscas e filtragens. Se frequentement consulta usuários pela matrícula, é interessante criar um índice nessa coluna.
     password = Column(String)
+    is_adm = Column(Boolean, default=False)
+
+    tarefas = relationship("Tarefa", back_populates="owner") #relacionamento com a tabela tarefas
     
 
-    # Relacionamento com a tabela Administrador
-    administrador = relationship("Administrador", back_populates="owner")
 
-
-class Administrador(Base):
+'''/class Administrador(Base):
     __tablename__ = "administrador"
 
     id = Column(Integer, primary_key=True)
     nome = Column(String, unique=True)
     matricula = Column(String, unique=True, index=True)
-    password = Column(String)
+    password = Column(String)/'''
 
-    #Chave estrangeira que referencia a tabela User
-    owner_id = Column(Integer, ForeignKey("users.id")) 
 
-    #Relacionamento com a tabela User
-    owner = relationship("User", back_populates="administrador")
+class Tarefa(Base):
+    __tablename__ = "tarefas"
+
+    id = Column(Integer, primary_key=True)
+    description = Column(String, index=True)
+    owner_id = Column(Integer, ForeignKey("users.id")) # Chave estrangeira que referencia o 'id' da tabela 'users'
+
+    owner = relationship("User", back_populates="tarefas") # Relacionamento com a tabela 'users'
+
+'''/
+RESUMINDO
+UserBase é apenas um molde para compartilhar campos comuns e economizar código.
+UserCreate é usada para receber e validar os dados quando um novo usuário é criado, incluindo a senha.
+User é usada para retornar os dados do usuário após ele ser criado, sem expor a senha.
+/'''
