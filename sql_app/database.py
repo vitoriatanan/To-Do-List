@@ -11,3 +11,10 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) #Ses
 
 Base = declarative_base() #retorna uma classe para criar os modelis ou classes de banco de dados (modelos ORM)
  
+# Função para obter a sessão do banco de dados
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
