@@ -27,3 +27,12 @@ def delete_user(user_matricula: str, db: Session = Depends(get_db)):
     return db_user
 
 
+# Criando tarefas para os usuários
+@router.post("/users/{user_id}/tarefas/", response_model=schemas.Tarefa)
+def create_tarefa_user(user_id: int, tarefa: schemas.TarefaCreate, db: Session = Depends(get_db)):
+    return crud.create_tarefas(db=db, tarefa=tarefa, user_id=user_id)
+
+# Deletar tarefas
+@router.delete("/users/{tarefa_id}/tarefas/", response_model=schemas.Tarefa)
+def delete_tarefa(tarefa_id: int, db: Session = Depends(get_db)):
+    return crud.delete_tarefa(db=db, tarefa_id=tarefa_id)
