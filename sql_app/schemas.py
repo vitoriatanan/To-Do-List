@@ -8,8 +8,8 @@ class TarefaCreate(TarefaBase):
     pass
 
 class Tarefa(TarefaBase):
-    id: int
-    owner_id: int
+    id: int # Identifica unicamente a tarefa
+    owner_id: int #Faz referência ao ID do usuário dono da tarefa
 
     class Config:
         orm_mode = True
@@ -29,6 +29,7 @@ class UserBase(BaseModel):
 # classes Create são usadas especcificamente para validação de entrada quando está criando novos objetos. Quando um novo usuário é criado, além do email, é necessário também o campo password, que não está em UserBase
 #As classes ItemCreate e UserCreate são separadas porque, ao criar novos objetos, os dados esperados são diferentes dos dados retornados (por exemplo, id não é fornecido ao criar, mas é necessário ao retornar o objeto).
 # Criação de usuário com senha
+# add campos passwors e is_adm, necessário para criar um novo usuário
 class UserCreate(UserBase):
     password: str
     is_adm: bool = False
@@ -39,7 +40,7 @@ class UserCreate(UserBase):
 # Retorno de usuário sem senha
 class User(UserBase):
     id: int #gerado automaticamete pelo banco de dados
-    tarefas: list[Tarefa] = []
+    tarefas: list[Tarefa] = [] # Lista de objetos do tipo Tarefa, que são as tarefas associadas ao usuário
    
     class Config:
         orm_mode = True
