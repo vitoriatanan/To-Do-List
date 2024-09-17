@@ -52,6 +52,7 @@ def delete_user(db: Session, user_matricula: str):
     if db_user:
         db.delete(db_user)
         db.commit()
+        return db_user
 
 
 '''/# Deleta um usuário do banco de dados
@@ -65,9 +66,35 @@ def delete_administrador(db: Session, administrador_matricula: str):
 def get_tarefas(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Tarefa).offset(skip).limit(limit).all()
 
-def create_tarefas(db: Session, item: schemas.TarefaCreate, user_id: int):
+
+# Cria uma tarefa associada a um usuário
+def create_tarefas(db: Session, tarefa: schemas.TarefaCreate, user_id: int):
     db_tarefa = models.Tarefa(**tarefa.dict(), owner_id=user_id)
+
     db.add(db_tarefa)
     db.commit()
     db.refresh(db_tarefa)
+
     return db_tarefa
+
+
+def delete_tarefa(db: Session, tarefa_id: int):
+    db_tarefa = db.query(models.Tarefa).filter(models.Tarefa.id == tarefa_id).first()
+
+    # Verifica se a tarefa existe
+    if db_tarefa:
+        db.delete(db_tarefa)
+        db.commit()
+
+        return db_tarefa
+
+'''/
+db: Session: Representa uma sessão de banco de dados. Essa sessão é utilizada para realiar operações como inserção, consulta e confirmação de transações no banco de dados.
+
+item: schemas.ItemCreate:
+É um objeto que representa os dados necessários para criar um novo item, seguindo o esquema ItemCreate (definido em schemas). Esse esquema provavelmente contém campos como title e description, que são os atributos necessários para o item.
+
+user_id: int:
+O ID do usuário ao qual o item será associado. Isso relaciona o item criado a um usuário específico, identificando o dono do item.
+
+/'''
