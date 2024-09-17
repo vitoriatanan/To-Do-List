@@ -39,7 +39,7 @@ class User(Base):
 class Tarefa(Base):
     __tablename__ = "tarefas"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True) 
     description = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id")) # Chave estrangeira que referencia o 'id' da tabela 'users'
 
