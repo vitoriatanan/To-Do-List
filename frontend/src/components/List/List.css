@@ -1,0 +1,33 @@
+ul{margin-top: 24px;}
+ul li {
+    width: 100%;
+}
+
+li {
+    height: 48px;
+    border-bottom: 1px solid #8586873b;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+li span {
+    font-size: 16px;
+    font-weight: 600;
+    cursor: default;
+}
+
+span.checked {
+    color: #858687;
+    text-decoration: line-through;
+}
+
+ul li button {
+    color: #0D47A1;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+ul li button:active{opacity: 0.5;}
